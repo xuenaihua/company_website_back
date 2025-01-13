@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.website.company_website_back.mapper.WebGoodsMapper">
+
+    <select id="selectGoodsList" resultType="com.website.company_website_back.entity.WebGoods">
+        SELECT
+            id,
+            route_id,
+            name,
+            price,
+            unit,
+            sort,
+            delete_flag,
+            create_date,
+            update_date
+        FROM
+            web_goods
+        WHERE
+            delete_flag = 0
+        <if test="webGoodsQueryDto.routeId != null">
+            AND route_id = #{webGoodsQueryDto.routeId}
+        </if>
+        <if test="webGoodsQueryDto.name != null and webGoodsQueryDto.name != ''">
+            AND `name` LIKE CONCAT('%',#{webGoodsQueryDto.name},'%')
+        </if>
+        <if test="webGoodsQueryDto.sortFields !=null and webGoodsQueryDto.sortFields.size()>0">
+            <foreach collection="webGoodsQueryDto.sortFields" item="sort" open="order by" separator=",">
+                ${sort.field} ${sort.order}
+            </foreach>
+        </if>
+    </select>
+</mapper>
