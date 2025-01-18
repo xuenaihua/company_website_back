@@ -11,5 +11,11 @@ spring:
     username: root
     password: Xue.1122
     type: com.zaxxer.hikari.HikariDataSource
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+springfox:
+  documentation:
+    enabled: true
 file:
   upload-dir: uploads/
