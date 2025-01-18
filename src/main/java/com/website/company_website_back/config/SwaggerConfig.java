@@ -38,7 +38,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .license("yibing")
+                .license("license")
                 .title("xx系统API文档")
                 .description("测试系统")
                 .version("1.0")
