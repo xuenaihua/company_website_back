@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
+@ApiModel(value = "分类路由实体类")
 @AllArgsConstructor
 @NoArgsConstructor
 public class WebRoute {
@@ -19,6 +22,7 @@ public class WebRoute {
     /**
      * 主键
      */
+    @ApiModelProperty(value = "主键")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
@@ -26,26 +30,31 @@ public class WebRoute {
     /**
      * 路由名称
      */
+    @ApiModelProperty(value = "路由名称")
     private String name;
 
     /**
      * 路由顺序
      */
+    @ApiModelProperty(value = "路由顺序")
     private Integer sort;
 
     /**
      * 删除标识
      */
+    @ApiModelProperty(value = "删除标识")
     @TableLogic(value = "0",delval = "-1")
     private Integer deleteFlag;
 
     /**
      * 创建时间
      */
+    @ApiModelProperty(value = "创建时间")
     private Date createDate;
 
     /**
      * 更新时间
      */
+    @ApiModelProperty(value = "更新时间")
     private Date updateDate;
 }
