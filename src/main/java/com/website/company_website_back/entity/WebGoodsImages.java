@@ -24,11 +24,6 @@ public class WebGoodsImages {
     private Long id;
 
     /**
-     * 商品ID
-     */
-    private Long goodsId;
-
-    /**
      * 文件名
      */
     private String fileName;
@@ -39,9 +34,14 @@ public class WebGoodsImages {
     private String fileToken;
 
     /**
-     * 排序
+     * 文件path
      */
-    private Integer sort;
+    private String filePath;
+
+    /**
+     * 文件大小
+     */
+    private Long size;
 
     /**
      * 删除标识
@@ -50,12 +50,7 @@ public class WebGoodsImages {
     private Integer deleteFlag;
 
     /**
-     * 创建时间
+     * 上传时间
      */
-    private Date createDate;
-
-    /**
-     * 更新时间
-     */
-    private Date updateDate;
+    private Date uploadDate;
 }
