@@ -3,14 +3,13 @@ package com.website.company_website_back.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.website.company_website_back.entity.WebGoodsImages;
+import com.website.company_website_back.entity.WebImages;
 import com.website.company_website_back.enums.DelEnumFlag;
-import com.website.company_website_back.mapper.WebGoodsImagesMapper;
-import com.website.company_website_back.service.IWebGoodsImagesService;
+import com.website.company_website_back.mapper.WebImagesMapper;
+import com.website.company_website_back.service.IWebImagesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,16 +26,16 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-public class WebGoodsImagesServiceImpl extends ServiceImpl<WebGoodsImagesMapper, WebGoodsImages> implements IWebGoodsImagesService {
+public class WebImagesServiceImpl extends ServiceImpl<WebImagesMapper, WebImages> implements IWebImagesService {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
 
     @Resource
-    private WebGoodsImagesMapper webGoodsImagesMapper;
+    private WebImagesMapper webImagesMapper;
 
     @Override
-    public WebGoodsImages uploadImage(MultipartFile file) {
+    public WebImages uploadImage(MultipartFile file) {
 
         // 生成当前日期文件夹名称（例如：2025-01-19）
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -73,7 +72,7 @@ public class WebGoodsImagesServiceImpl extends ServiceImpl<WebGoodsImagesMapper,
         }
 
         // 保存图片元数据到数据库
-        WebGoodsImages image = new WebGoodsImages();
+        WebImages image = new WebImages();
         image.setFileToken(token);
         image.setFileName(originalFilename);
         image.setFilePath(filePath.toString());
@@ -89,11 +88,11 @@ public class WebGoodsImagesServiceImpl extends ServiceImpl<WebGoodsImagesMapper,
 
     @Override
     public org.springframework.core.io.Resource imageByToken(String token) {
-        LambdaQueryWrapper<WebGoodsImages> imageWrapper = Wrappers.lambdaQuery(WebGoodsImages.class);
-        imageWrapper.eq(WebGoodsImages::getFileToken,token)
-                .eq(WebGoodsImages::getDeleteFlag, DelEnumFlag.NORMAL.getCode());
+        LambdaQueryWrapper<WebImages> imageWrapper = Wrappers.lambdaQuery(WebImages.class);
+        imageWrapper.eq(WebImages::getFileToken,token)
+                .eq(WebImages::getDeleteFlag, DelEnumFlag.NORMAL.getCode());
 
-        WebGoodsImages image = this.getOne(imageWrapper);
+        WebImages image = this.getOne(imageWrapper);
         if (Objects.isNull(image)){
             return null;
         }
