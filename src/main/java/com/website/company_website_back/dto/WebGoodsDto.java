@@ -8,10 +8,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @ApiModel(value = "商品传入参数")
@@ -65,5 +65,5 @@ public class WebGoodsDto {
      * 商品图片
      */
     @ApiModelProperty(value = "商品图片")
-    private MultipartFile[] goodsImages;
+    private List<String> images;
 }

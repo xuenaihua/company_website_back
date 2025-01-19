@@ -17,7 +17,7 @@ public interface WebGoodsMapper extends BaseMapper<WebGoods> {
      */
     Page<WebGoods> selectGoodsList(
             Page<WebGoods> page,
-            @Param("webGoodsDto") WebGoodsQueryDto webGoodsQueryDto
+            @Param("webGoodsQueryDto") WebGoodsQueryDto webGoodsQueryDto
     );
 
 }

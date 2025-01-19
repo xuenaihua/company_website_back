@@ -9,8 +9,10 @@ import com.website.company_website_back.dto.WebGoodsQueryDto;
 import com.website.company_website_back.entity.WebGoods;
 import com.website.company_website_back.enums.DelEnumFlag;
 import com.website.company_website_back.mapper.WebGoodsMapper;
+import com.website.company_website_back.service.IWebGoodsImagesService;
 import com.website.company_website_back.service.IWebGoodsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -21,6 +23,9 @@ public class WebGoodsServiceImpl extends ServiceImpl<WebGoodsMapper, WebGoods> i
     @Resource
     private WebGoodsMapper webGoodsMapper;
 
+    @Resource
+    private IWebGoodsImagesService webGoodsImagesService;
+
     @Override
     public Page<WebGoods> getGoodsList(WebGoodsQueryDto webGoodsQueryDto) {
         return webGoodsMapper.selectGoodsList(
@@ -30,9 +35,10 @@ public class WebGoodsServiceImpl extends ServiceImpl<WebGoodsMapper, WebGoods> i
     }
 
     @Override
+    @Transactional
     public Boolean updateGoodsById(WebGoodsDto webGoodsDto) {
-        LambdaUpdateWrapper<WebGoods> update = Wrappers.lambdaUpdate(WebGoods.class);
-        update.eq(WebGoods::getId, webGoodsDto.getId())
+        LambdaUpdateWrapper<WebGoods> updateWrapper = Wrappers.lambdaUpdate(WebGoods.class);
+        updateWrapper.eq(WebGoods::getId, webGoodsDto.getId())
                 .eq(WebGoods::getDeleteFlag, DelEnumFlag.NORMAL.getCode())
                 .set(WebGoods::getRouteId, webGoodsDto.getRouteId())
                 .set(WebGoods::getName, webGoodsDto.getName())
@@ -40,10 +46,13 @@ public class WebGoodsServiceImpl extends ServiceImpl<WebGoodsMapper, WebGoods> i
                 .set(WebGoods::getUnit, webGoodsDto.getUnit())
                 .set(WebGoods::getSort, webGoodsDto.getSort())
                 .set(WebGoods::getUpdateDate, new Date());
-        return this.update(update);
+        boolean update = this.update(updateWrapper);
+        Boolean imagesFlag = webGoodsImagesService.saveOrDel(webGoodsDto.getId(), webGoodsDto.getImages());
+        return update&&imagesFlag;
     }
 
     @Override
+    @Transactional
     public Boolean addGoods(WebGoodsDto webGoodsDto) {
         WebGoods webGoods = new WebGoods();
         webGoods.setRouteId(webGoodsDto.getRouteId());
@@ -51,6 +60,8 @@ public class WebGoodsServiceImpl extends ServiceImpl<WebGoodsMapper, WebGoods> i
         webGoods.setPrice(webGoodsDto.getPrice());
         webGoods.setUnit(webGoodsDto.getUnit());
         webGoods.setSort(webGoodsDto.getSort());
-        return this.save(webGoods);
+        boolean saveFlag = this.save(webGoods);
+        Boolean imagesFlag = webGoodsImagesService.saveOrDel(webGoods.getId(), webGoodsDto.getImages());
+        return saveFlag&&imagesFlag;
     }
 }
