@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.website.company_website_back.mapper.SysUserMapper">
+    <update id="resetUserPwd"></update>
+    <update id="updateUser"></update>
+    <delete id="deleteUserById"></delete>
+
+
+    <select id="selectUserByUserName" resultType="com.website.company_website_back.entity.SysUser">
+        SELECT
+            *
+        FROM sys_user
+          AND user_name = #{username}
+    </select>
+    <select id="selectUserById" resultType="com.website.company_website_back.entity.SysUser">
+        SELECT
+            *
+        FROM sys_user
+            AND user_id = #{userId}
+    </select>
+</mapper>

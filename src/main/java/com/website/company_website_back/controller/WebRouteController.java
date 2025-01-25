@@ -23,9 +23,9 @@ public class WebRouteController {
     private IWebRouteService webRouteService;
 
     @ApiOperation(value = "查询分类路由")
-    @GetMapping
-    public ApiResponse<List<WebRoute>> getRouteList(){
-        return ApiResponse.success(webRouteService.getRouteList());
+    @GetMapping("/{routeType}")
+    public ApiResponse<List<WebRoute>> getRouteList(@PathVariable(value = "routeType") Integer routeType){
+        return ApiResponse.success(webRouteService.getRouteList(routeType));
     }
 
     @ApiOperation(value = "修改分类路由")

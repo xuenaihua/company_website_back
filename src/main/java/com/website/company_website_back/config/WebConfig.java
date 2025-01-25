@@ -1,6 +1,7 @@
 package com.website.company_website_back.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -31,6 +32,14 @@ public class WebConfig implements WebMvcConfigurer {
         // 将本地文件夹映射为URL路径
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/"); // 本地文件夹路径
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")  // 对所有请求路径开启CORS
+                .allowedOrigins("*")  // 允许的源地址
+                .allowedMethods("GET", "POST", "PUT", "DELETE")  // 允许的请求方法
+                .allowedHeaders("*");  // 允许的请求头
     }
 }
 

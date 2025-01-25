@@ -12,7 +12,7 @@ public interface IWebRouteService extends IService<WebRoute> {
      * 获取路由列表
      * @return 列表
      */
-    List<WebRoute> getRouteList();
+    List<WebRoute> getRouteList(Integer routeType);
 
     /**
      * 更新路由

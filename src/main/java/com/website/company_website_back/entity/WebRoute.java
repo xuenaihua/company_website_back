@@ -30,6 +30,12 @@ public class WebRoute {
     private Long id;
 
     /**
+     * 路由类型
+     */
+    @ApiModelProperty(value = "路由类型",notes = "1:零售、2:批发")
+    private Integer type;
+
+    /**
      * 路由名称
      */
     @ApiModelProperty(value = "路由名称")

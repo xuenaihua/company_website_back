@@ -22,9 +22,10 @@ public class WebRouteServiceImpl extends ServiceImpl<WebRouteMapper, WebRoute> i
     private WebRouteMapper webRouteMapper;
 
     @Override
-    public List<WebRoute> getRouteList() {
+    public List<WebRoute> getRouteList(Integer routeType) {
         LambdaQueryWrapper<WebRoute> query = Wrappers.lambdaQuery();
         query.eq(WebRoute::getDeleteFlag, DelEnumFlag.NORMAL.getCode())
+                .eq(WebRoute::getType, routeType)
                 .orderByAsc(WebRoute::getSort);
         return this.list(query);
     }
