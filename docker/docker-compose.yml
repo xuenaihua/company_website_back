@@ -1,0 +1,109 @@
+#version: '3.8'
+#
+#services:
+#  mysql:
+#    image: mysql:latest                # 使用 MySQL 最新 官方镜像
+#    container_name: mysql_container # 容器名称
+#    restart: always                 # 自动重启容器
+#    environment:                    # 配置 MySQL 环境变量
+#      MYSQL_ROOT_PASSWORD: root_password
+#      MYSQL_DATABASE: your_database_name
+#      MYSQL_USER: your_username
+#      MYSQL_PASSWORD: your_password
+#    ports:
+#      - "3306:3306"                 # 映射端口到主机
+#    volumes:
+#      - mysql_data:/var/lib/mysql   # 数据持久化存储
+#
+#  app:
+#    build:
+#      context: docker                    # 使用当前目录的 Dockerfile 构建
+#      dockerfile: Dockerfile
+#    container_name: springboot_app  # 容器名称
+#    restart: always                 # 自动重启容器
+#    depends_on:                     # 确保 MySQL 容器先启动
+#      - mysql
+#    ports:
+#      - "12264:12264"                 # 映射端口到主机
+#    environment:                    # Spring Boot 环境变量
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/your_database_name?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+#      SPRING_DATASOURCE_USERNAME: your_username
+#      SPRING_DATASOURCE_PASSWORD: your_password
+#    volumes:
+#      - ./logs:/logs                # 可选：将日志文件存储到主机
+#
+#volumes:
+#  mysql_data:
+
+version: "3"
+
+# 子网划分
+# PRD：生产 DEV：开发 TEST：测试 SHA：公共支撑 SEC：安全
+networks:
+  SN_PRD_CWS_01:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+# 应用服务
+services:
+  sss_db_mysql:
+    container_name: ${SSS_MYSQL_CONTAINER_NAME}
+    image: mysql:5.7.42-debian
+    restart: always
+    ports:
+      - "33096:3306"
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${STORE_PATH}/mysql/data:/var/lib/mysql
+      - ${STORE_PATH}/mysql/config:/etc/mysql/
+    networks:
+      SN_PRD_CWS_01:
+        ipv4_address: 172.20.0.11
+
+  sss_server:
+    container_name: ${SSS_SERVER_CONTAINER_NAME}
+    image: deertech/sss-server:1.0.0
+    restart: always
+    privileged: true
+    ports:
+      - "12264:12264"
+    environment:
+      - TZ=Asia/Shanghai
+      - localPath=/data/deertech/server/logs
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${STORE_PATH}/server/logs:/data/deertech/server/logs
+    depends_on:
+      - sss_db_mysql
+    networks:
+      SN_PRD_CWS_01:
+        ipv4_address: 172.20.0.12
+
+  sss_nginx:
+    container_name: ${SSS_NGINX_CONTAINER_NAME}
+    image: nginx:1.24.0-bullseye
+    restart: always
+    privileged: true
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${STORE_PATH}/nginx/config/nginx.conf:/etc/nginx/nginx.conf
+      - ${STORE_PATH}/nginx/FE:/data/deertech/FE
+      - ${STORE_PATH}/nginx/keystore:/data/deertech/keystore
+      - ${STORE_PATH}/nginx/log:/var/log/nginx
+    networks:
+      SN_PRD_CWS_01:
+        ipv4_address: 172.20.0.13
+
